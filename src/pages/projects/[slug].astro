@@ -1,0 +1,84 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagList from '../../components/TagList.astro';
+import { categories, formatDate } from '../../data/labels';
+
+export async function getStaticPaths() {
+	const projects = await getCollection('projects', ({ data }) => !data.draft);
+	return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+interface Props {
+	project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, summary, category, tools, date, cover, coverAlt, github, liveUrl, notebookUrl } = project.data;
+const { Content } = await render(project);
+
+const links = [
+	{ label: 'Live dashboard / demo', href: liveUrl },
+	{ label: 'Code on GitHub', href: github },
+	{ label: 'Notebook', href: notebookUrl },
+].filter((link) => link.href);
+---
+
+<BaseLayout title={title} description={summary}>
+	<article class="container">
+		<header class="page-header">
+			<a class="back" href={`/projects/?filter=${category}`}>← {categories[category]} projects</a>
+			<div class="meta">
+				<span class="badge" data-tone={category}>{categories[category]}</span>
+				<time datetime={date.toISOString()}>{formatDate(date)}</time>
+			</div>
+			<h1>{title}</h1>
+			<p>{summary}</p>
+			<TagList tags={tools} />
+			{
+				links.length > 0 && (
+					<div class="btn-row">
+						{links.map((link, i) => (
+							<a class:list={['btn', i === 0 && 'btn-primary']} href={link.href} target="_blank" rel="noopener">
+								{link.label} ↗
+							</a>
+						))}
+					</div>
+				)
+			}
+		</header>
+
+		{cover && <img class="cover" src={cover} alt={coverAlt ?? ''} />}
+
+		<div class="prose">
+			<Content />
+		</div>
+	</article>
+</BaseLayout>
+
+<style>
+	.back {
+		display: inline-block;
+		margin-bottom: 20px;
+		font-size: 0.875rem;
+		font-weight: 500;
+		text-decoration: none;
+	}
+	.meta {
+		display: flex;
+		gap: 16px;
+		align-items: center;
+		margin-bottom: 12px;
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+	.btn-row {
+		margin-top: 24px;
+	}
+	.cover {
+		width: 100%;
+		border-radius: var(--radius);
+		border: 1px solid var(--border);
+		margin-bottom: 40px;
+	}
+</style>

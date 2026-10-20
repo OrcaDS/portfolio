@@ -1,0 +1,238 @@
+# Pages CMS settings: builds the editing forms at https://app.pagescms.org
+# Keep the fields in sync with src/content.config.ts and src/data/profile.ts.
+
+media:
+  input: public/media
+  output: /media
+  rename: safe
+  categories: [image, document]
+
+content:
+  - name: projects
+    label: Projects
+    type: collection
+    path: src/content/projects
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, category, date, featured]
+      sort: date
+      order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: summary
+        label: One-line summary
+        description: Shown on the project card. One sentence.
+        type: text
+        required: true
+      - name: category
+        label: Area
+        type: select
+        required: true
+        options:
+          values:
+            - name: data-science
+              label: Data Science
+            - name: dashboards
+              label: Dashboards
+            - name: systems
+              label: Systems
+      - name: date
+        label: Date finished
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: tools
+        label: Tools used
+        description: One tool per row, e.g. Python, Looker Studio.
+        type: string
+        list: true
+      - name: featured
+        label: Feature on Home page
+        description: The 3 newest featured projects are shown on Home.
+        type: boolean
+      - name: cover
+        label: Cover image
+        description: A screenshot of your work. Landscape (16:9) looks best.
+        type: image
+      - name: coverAlt
+        label: Cover image description
+        description: A few words describing the image, for screen readers.
+        type: string
+      - name: github
+        label: GitHub link
+        type: string
+        pattern:
+          regex: "^https://"
+          message: Paste the full link starting with https://
+      - name: liveUrl
+        label: Live dashboard / demo link
+        type: string
+        pattern:
+          regex: "^https://"
+          message: Paste the full link starting with https://
+      - name: notebookUrl
+        label: Notebook link
+        type: string
+        pattern:
+          regex: "^https://"
+          message: Paste the full link starting with https://
+      - name: draft
+        label: Hide from site (draft)
+        type: boolean
+      - name: body
+        label: Write-up
+        description: "Suggested headings: The problem, What I did, Results."
+        type: rich-text
+        options:
+          format: markdown
+
+  - name: blog
+    label: Blog (events)
+    type: collection
+    path: src/content/blog
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, role, date]
+      sort: date
+      order: desc
+    fields:
+      - name: title
+        label: Event name
+        type: string
+        required: true
+      - name: summary
+        label: One-line summary
+        type: text
+        required: true
+      - name: role
+        label: Your role
+        type: select
+        required: true
+        options:
+          values:
+            - name: hosted
+              label: Hosted
+            - name: attended
+              label: Attended
+            - name: volunteered
+              label: Volunteered
+      - name: date
+        label: Date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: location
+        label: Location
+        type: string
+      - name: organizer
+        label: Organizer
+        type: string
+      - name: link
+        label: Event page link
+        type: string
+        pattern:
+          regex: "^https://"
+          message: Paste the full link starting with https://
+      - name: cover
+        label: Cover photo
+        type: image
+      - name: coverAlt
+        label: Cover photo description
+        type: string
+      - name: photos
+        label: Photo gallery
+        type: object
+        list: true
+        fields:
+          - name: src
+            label: Photo
+            type: image
+            required: true
+          - name: alt
+            label: Description
+            type: string
+            required: true
+      - name: draft
+        label: Hide from site (draft)
+        type: boolean
+      - name: body
+        label: Write-up
+        description: "Suggested headings: What it was, What I did, Takeaways."
+        type: rich-text
+        options:
+          format: markdown
+
+  - name: profile
+    label: Profile (Home page)
+    type: file
+    path: src/data/profile.json
+    format: json
+    fields:
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: headline
+        label: Headline
+        description: One sentence under your name.
+        type: text
+        required: true
+      - name: location
+        label: Location
+        type: string
+      - name: photo
+        label: Photo
+        description: Square headshot. Leave empty to show your initials.
+        type: image
+      - name: bio
+        label: Bio paragraphs
+        description: Each entry is one paragraph.
+        type: text
+        list: true
+        required: true
+      - name: contactNote
+        label: "\"Let's talk\" note"
+        type: text
+      - name: email
+        label: Public email
+        type: string
+      - name: linkedin
+        label: LinkedIn link
+        type: string
+      - name: github
+        label: GitHub link
+        type: string
+      - name: cvUrl
+        label: CV (PDF)
+        description: Upload your CV. Leave empty to hide the Download CV button.
+        type: file
+      - name: skills
+        label: Skills
+        type: object
+        list: true
+        fields:
+          - name: category
+            label: Area
+            type: select
+            required: true
+            options:
+              values:
+                - name: data-science
+                  label: Data Science
+                - name: dashboards
+                  label: Dashboards
+                - name: systems
+                  label: Systems
+          - name: items
+            label: Skills
+            type: string
+            list: true

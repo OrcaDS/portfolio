@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import FilterTabs from '../../components/FilterTabs.astro';
+import { byNewest, categories } from '../../data/labels';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(byNewest);
+const counts = Object.fromEntries(
+	Object.keys(categories).map((key) => [key, projects.filter((p) => p.data.category === key).length]),
+);
+---
+
+<BaseLayout title="Projects" description="Data science, dashboard and systems projects.">
+	<div class="container">
+		<header class="page-header">
+			<p class="eyebrow">Work</p>
+			<h1>Projects</h1>
+			<p>
+				Models and analyses, dashboards that people use to make decisions, and the data systems
+				behind them.
+			</p>
+		</header>
+		<FilterTabs options={categories} counts={counts} label="Filter projects by category" />
+		<div class="grid">
+			{projects.map((project) => <ProjectCard project={project} />)}
+		</div>
+	</div>
+</BaseLayout>

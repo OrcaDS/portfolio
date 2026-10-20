@@ -1,0 +1,86 @@
+---
+// Tabs that show/hide cards by their data-filter-item value.
+// The chosen tab is kept in the address (e.g. /projects/?filter=dashboards) so it can be linked to.
+interface Props {
+	options: Record<string, string>;
+	counts: Record<string, number>;
+	label: string;
+}
+
+const { options, counts, label } = Astro.props;
+const total = Object.values(counts).reduce((sum, n) => sum + n, 0);
+---
+
+<div class="filter-tabs" role="group" aria-label={label}>
+	<button type="button" data-filter="all" aria-pressed="true">
+		All <span>{total}</span>
+	</button>
+	{
+		Object.entries(options).map(([value, text]) => (
+			<button type="button" data-filter={value} aria-pressed="false" disabled={!counts[value]}>
+				{text} <span>{counts[value] ?? 0}</span>
+			</button>
+		))
+	}
+</div>
+
+<script>
+	const tabs = document.querySelector<HTMLElement>('.filter-tabs');
+	const buttons = [...(tabs?.querySelectorAll<HTMLButtonElement>('button') ?? [])];
+	const items = document.querySelectorAll<HTMLElement>('[data-filter-item]');
+
+	function apply(filter: string) {
+		if (!buttons.some((b) => b.dataset.filter === filter && !b.disabled)) filter = 'all';
+		buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
+		items.forEach((item) => (item.hidden = filter !== 'all' && item.dataset.filterItem !== filter));
+
+		const url = new URL(location.href);
+		if (filter === 'all') url.searchParams.delete('filter');
+		else url.searchParams.set('filter', filter);
+		history.replaceState(null, '', url);
+	}
+
+	buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter!)));
+	apply(new URLSearchParams(location.search).get('filter') ?? 'all');
+</script>
+
+<style>
+	.filter-tabs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-bottom: 28px;
+	}
+	button {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 7px 14px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: var(--surface);
+		color: var(--muted);
+		font: inherit;
+		font-size: 0.875rem;
+		font-weight: 500;
+		cursor: pointer;
+	}
+	button:hover:not(:disabled) {
+		color: var(--text);
+		border-color: var(--accent);
+	}
+	button[aria-pressed='true'] {
+		background: var(--text);
+		border-color: var(--text);
+		color: var(--bg);
+	}
+	button:disabled {
+		opacity: 0.45;
+		cursor: default;
+	}
+	span {
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		opacity: 0.7;
+	}
+</style>

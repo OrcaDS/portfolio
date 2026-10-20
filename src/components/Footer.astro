@@ -1,0 +1,30 @@
+---
+import { profile } from '../data/profile';
+import ContactLinks from './ContactLinks.astro';
+---
+
+<footer class="site-footer">
+	<div class="container inner">
+		<p class="muted">© {new Date().getFullYear()} {profile.name}</p>
+		<ContactLinks />
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		border-top: 1px solid var(--border);
+		margin-top: 64px;
+		padding: 24px 0;
+		font-size: 0.875rem;
+	}
+	.inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+	p {
+		margin: 0;
+	}
+</style>

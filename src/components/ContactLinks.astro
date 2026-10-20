@@ -1,0 +1,41 @@
+---
+// Email, LinkedIn and GitHub links from profile.ts. Empty ones are hidden.
+import { profile } from '../data/profile';
+
+const links = [
+	{ label: 'Email', href: profile.email && `mailto:${profile.email}` },
+	{ label: 'LinkedIn', href: profile.linkedin },
+	{ label: 'GitHub', href: profile.github },
+].filter((link) => link.href);
+---
+
+<ul class="contact-links">
+	{
+		links.map((link) => (
+			<li>
+				<a href={link.href} target={link.label === 'Email' ? undefined : '_blank'} rel="noopener">
+					{link.label}
+				</a>
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	.contact-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	a {
+		color: var(--muted);
+		text-decoration: none;
+		font-weight: 500;
+	}
+	a:hover {
+		color: var(--accent);
+	}
+</style>

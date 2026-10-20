@@ -1,0 +1,127 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate, roles } from '../../data/labels';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog', ({ data }) => !data.draft);
+	return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, summary, role, date, location, organizer, cover, coverAlt, photos, link } = post.data;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={title} description={summary}>
+	<article class="container">
+		<header class="page-header">
+			<a class="back" href={`/blog/?filter=${role}`}>← {roles[role]} events</a>
+			<span class="badge" data-tone={role}>{roles[role]}</span>
+			<h1>{title}</h1>
+			<dl class="facts">
+				<div>
+					<dt>Date</dt>
+					<dd><time datetime={date.toISOString()}>{formatDate(date)}</time></dd>
+				</div>
+				{
+					location && (
+						<div>
+							<dt>Location</dt>
+							<dd>{location}</dd>
+						</div>
+					)
+				}
+				{
+					organizer && (
+						<div>
+							<dt>Organizer</dt>
+							<dd>{organizer}</dd>
+						</div>
+					)
+				}
+			</dl>
+			{
+				link && (
+					<a class="btn" href={link} target="_blank" rel="noopener">
+						Event page ↗
+					</a>
+				)
+			}
+		</header>
+
+		{cover && <img class="cover" src={cover} alt={coverAlt ?? ''} />}
+
+		<div class="prose">
+			<Content />
+		</div>
+
+		{
+			photos.length > 0 && (
+				<section class="gallery" aria-label="Photos">
+					<h2>Photos</h2>
+					<div class="photos">
+						{photos.map((photo) => (
+							<img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+						))}
+					</div>
+				</section>
+			)
+		}
+	</article>
+</BaseLayout>
+
+<style>
+	.back {
+		display: block;
+		margin-bottom: 20px;
+		font-size: 0.875rem;
+		font-weight: 500;
+		text-decoration: none;
+	}
+	.badge {
+		margin-bottom: 12px;
+	}
+	.facts {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px 32px;
+		margin: 16px 0 24px;
+	}
+	dt {
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--muted);
+	}
+	dd {
+		margin: 0;
+		font-weight: 500;
+	}
+	.cover {
+		width: 100%;
+		border-radius: var(--radius);
+		border: 1px solid var(--border);
+		margin-bottom: 40px;
+	}
+	.gallery {
+		margin-top: 48px;
+	}
+	.photos {
+		display: grid;
+		gap: 12px;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+	}
+	.photos :global(img) {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		border-radius: 8px;
+		border: 1px solid var(--border);
+	}
+</style>

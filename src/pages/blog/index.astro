@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EventCard from '../../components/EventCard.astro';
+import FilterTabs from '../../components/FilterTabs.astro';
+import { byNewest, roles } from '../../data/labels';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(byNewest);
+const counts = Object.fromEntries(
+	Object.keys(roles).map((key) => [key, posts.filter((p) => p.data.role === key).length]),
+);
+---
+
+<BaseLayout title="Blog" description="Events I've hosted, attended and volunteered at.">
+	<div class="container">
+		<header class="page-header">
+			<p class="eyebrow">Community</p>
+			<h1>Blog</h1>
+			<p>Events I've hosted, attended and volunteered at, and what I took away from each.</p>
+		</header>
+		<FilterTabs options={roles} counts={counts} label="Filter events by role" />
+		<div class="stack">
+			{posts.map((post) => <EventCard post={post} />)}
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.stack {
+		display: grid;
+		gap: 16px;
+	}
+</style>

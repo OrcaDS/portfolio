@@ -1,0 +1,102 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, roles } from '../data/labels';
+import Placeholder from './Placeholder.astro';
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, summary, role, date, location, cover, coverAlt } = post.data;
+---
+
+<article class="card" data-filter-item={role}>
+	<div class="media">
+		{
+			cover ? (
+				<img src={cover} alt={coverAlt ?? ''} loading="lazy" decoding="async" />
+			) : (
+				<Placeholder tone={role} />
+			)
+		}
+	</div>
+	<div class="body">
+		<span class="badge" data-tone={role}>{roles[role]}</span>
+		<h3><a href={`/blog/${post.id}/`}>{title}</a></h3>
+		<p class="where">
+			<time datetime={date.toISOString()}>{formatDate(date)}</time>{location && ` · ${location}`}
+		</p>
+		<p class="summary">{summary}</p>
+	</div>
+</article>
+
+<style>
+	.card {
+		position: relative;
+		display: grid;
+		grid-template-columns: 1fr;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		overflow: hidden;
+		box-shadow: var(--shadow);
+		transition: transform 0.15s, border-color 0.15s;
+	}
+	@media (min-width: 640px) {
+		.card {
+			grid-template-columns: 240px 1fr;
+		}
+	}
+	.card:hover {
+		transform: translateY(-2px);
+		border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+	}
+	.card[hidden] {
+		display: none;
+	}
+	.media {
+		aspect-ratio: 16 / 9;
+		background: var(--surface-2);
+	}
+	@media (min-width: 640px) {
+		.media {
+			aspect-ratio: auto;
+			min-height: 160px;
+		}
+	}
+	.media :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.body {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 18px 20px 20px;
+	}
+	h3 {
+		margin: 0;
+	}
+	h3 a {
+		color: var(--text);
+		text-decoration: none;
+	}
+	h3 a::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+	}
+	p {
+		margin: 0;
+	}
+	.where {
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+	.summary {
+		color: var(--muted);
+		font-size: 0.9375rem;
+	}
+</style>

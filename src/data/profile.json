@@ -1,0 +1,29 @@
+{
+  "name": "Kurt Gemoya",
+  "headline": "BSIT student building dashboards, data pipelines and AI backends that real people use.",
+  "location": "Manila, Philippines",
+  "photo": "",
+  "bio": [
+    "I work across data analytics, AI engineering and cloud development. Across two internships I have built automated dashboards, Python data pipelines, backend services and cloud-deployed models, and I validate them on held-out data and with real users.",
+    "I'm studying BS Information Technology at the Polytechnic University of the Philippines (expected June 2028, GPA 1.42, President's Lister ×3) and lead the Data Science and Analytics Department of the AWS Student Builder Group PUP Manila."
+  ],
+  "contactNote": "I'm looking for an internship where I can apply data, AI and engineering skills to real problems.",
+  "email": "kurt1984217@gmail.com",
+  "linkedin": "https://www.linkedin.com/in/kurtgemoya",
+  "github": "https://github.com/OrcaDS",
+  "cvUrl": "",
+  "skills": [
+    {
+      "category": "data-science",
+      "items": ["Python", "pandas", "scikit-learn", "Statistics", "Regression analysis", "Matplotlib"]
+    },
+    {
+      "category": "dashboards",
+      "items": ["Looker Studio", "Tableau", "SQL (BigQuery)", "Google Sheets", "Data visualization"]
+    },
+    {
+      "category": "systems",
+      "items": ["FastAPI", "AWS (EC2, Lambda, S3, Redshift)", "SQLite", "Data pipelines"]
+    }
+  ]
+}
