@@ -18,15 +18,14 @@ A live portfolio on Netlify showing Kurt's best data science, dashboard and syst
 ## Done
 - 2026-10-20: Built the Astro 7 site with example content (3 projects, 3 events). It builds cleanly and was checked on desktop and phone, in light and dark mode.
 - 2026-10-20: Repo setup: git, CLAUDE.md, `npm run check`, shared Claude settings, /handoff skill.
-
 - 2026-10-20: Filled site from resume; added Pages CMS (`.pages.yml`), flat content files, uploads in `public/media`; pushed to GitHub.
 
 ## Next up
-1. Owner connects Netlify to the GitHub repo.
-2. Owner signs in to Pages CMS and does a test edit.
+1. Confirm Netlify is live (owner to send the URL) and review the live site.
+2. Owner does a Pages CMS test save (CV upload); verify the commit format matches the schemas.
 3. Add screenshots, a photo and the CV through Pages CMS.
 4. Fill gaps: Beat the Bot accuracy vs baseline, booth event name/place, hackathon location, project GitHub links.
 
 ## Open questions
 - Free `*.netlify.app` address or a custom domain?
-- Any design changes after reviewing the preview?
+- Any design changes after reviewing the live site?

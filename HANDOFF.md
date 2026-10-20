@@ -1,30 +1,39 @@
 # Handoff
 
-_Session date: 2026-10-20 · Last commit: none yet (git initialized, nothing committed)_
+_Session date: 2026-10-20 · Last commit: 01d3511 (on GitHub: github.com/OrcaDS/portfolio, public, branch main)_
 
 ## Goal of the last session
-Plan and build the portfolio site, then make the repo ready for future Claude sessions.
+Build the portfolio, fill it from Kurt's resume, add form-based editing (Pages CMS), and get it onto GitHub and Netlify.
 
 ## Done
-- Built the full site: Home, Projects (with filters), Blog (with filters), and the individual project and event pages.
-- Added example content: 3 projects (one per category) and 3 events (one per role).
-- Added `netlify.toml`, a plain-English README, and the `npm run check` script.
-- Repo setup: git init, CLAUDE.md, PROGRESS.md, `.claude/settings.json`, `.claude/skills/handoff/`.
+- Built the Astro 7 site: Home, Projects (filters: Data Science / Dashboards / Systems), Blog (filters: Hosted / Attended / Volunteered), plus detail pages, light/dark mode and phone layout.
+- Filled it from the resume (`Documents/SELF/Gemoya_Kurt_Resume.pdf`):
+  - Projects: beat-the-bot, event-performance-dashboard, surveyor, aeroc
+  - Events: aws-and-looker-studio-workshops, solar-power-hackathon, beat-the-bot-booth
+- Added Pages CMS: `.pages.yml`. Content moved to flat `.md` files. Images are plain `/media/...` paths in `public/media/`. Home details moved to `src/data/profile.json`, validated by `profile.ts`.
+- Made the schemas accept `""`/`null` for empty optional fields (tested). `npm run check`: 0 errors, 10 pages.
+- Created the public GitHub repo and pushed. Added `.gitattributes` (LF line endings).
+- Made a fill-in doc for the owner: https://claude.ai/code/artifact/e8cc4fec-8674-4710-bdfe-867c06eb694f
 
 ## Current state
-- Works: `npm run check` passes (0 type errors, 9 pages built).
-- Every piece of content is placeholder text. `profile.ts` uses the name "Kurt", "City, Country" and you@example.com.
-- Not on GitHub or Netlify yet. No commits.
+- Works locally and is pushed.
+- **Unverified:** the owner said "done" with Netlify and Pages CMS, but no Pages CMS commit has reached GitHub and no Netlify status is visible yet. Waiting for the owner's Netlify URL and the CV test save.
+- The `.pages.yml` field shapes are written from the docs and haven't been tested in the live editor. Most uncertain: rich-text `options.format: markdown`, `list: true` on string/text/object fields, and how empty images and booleans are saved.
+- The CV is not on the site yet (`cvUrl: ""`). The owner will upload it via Pages CMS. Copying it from the SELF folder was blocked by permissions.
 
 ## Decisions made
-- Astro over a hand-written site: Markdown content is easy for a non-programmer to edit.
-- Cover images are optional; a category- or role-colored placeholder shows instead. Why: posts can go up before screenshots exist.
-- The CV button and empty contact links stay hidden until filled in.
+- Pages CMS over Decap/Tina: simplest, free, nothing to host.
+- Plain `<img>` instead of `astro:assets`: Pages CMS writes `/media/...` paths, not file-relative ones. Trade-off: no automatic image optimization.
+- Event dates show month + year only, and location is optional: the resume has no exact days or venues, and we don't invent details.
+- Email `kurt1984217@gmail.com` approved for public use.
+- Project tools list only what the resume states. Speculative tools were removed.
 
 ## Next steps (in order)
-1. Get the owner's real profile details and fill in `profile.ts`.
-2. Write up real projects and events with the owner.
-3. First commit, then guide the owner through GitHub and Netlify (the owner handles the accounts).
+1. Get the Netlify URL from the owner. Check the live site: all pages, links, phone layout.
+2. After the owner's first Pages CMS save: `git pull`, then inspect the diff to see how Pages CMS formats frontmatter, body, empty fields and image paths. Fix `.pages.yml` or the schemas if anything mismatches, and run `npm run check`.
+3. Set `site:` in `astro.config.mjs` to the Netlify URL. Add an og:image/preview image for LinkedIn sharing.
+4. Content gaps from the owner: Beat the Bot accuracy vs baseline, the booth event's name/place, the hackathon location, project GitHub links, screenshots, a photo.
 
 ## Gotchas
-- See CLAUDE.md → Gotchas (Astro 7 zod import, padding-block, screenshot width).
+- Always `git pull` before local edits: Pages CMS commits straight to `main`.
+- See CLAUDE.md → Gotchas and Rules (keep `.pages.yml` in sync with the schemas; optional fields must accept `""`/`null`).

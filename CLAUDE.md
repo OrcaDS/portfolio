@@ -40,6 +40,7 @@ Run from the project root.
 - Colors only through CSS variables in `global.css`. Both light and dark blocks must be updated together.
 
 ## Gotchas
+- Pages CMS commits straight to `main`: run `git pull` before any local edit.
 - Astro 7: import `z` from `astro/zod`, not `astro:content` (deprecated). Zod 4: use `z.url()`, not `z.string().url()`.
 - Global `.section`/`.page-header` set vertical padding only (`padding-block`). Setting horizontal padding there breaks alignment with `.container`.
 - Headless Edge screenshots can't go narrower than ~500px. To test phone width, load the page in a 390px `<iframe>`.
